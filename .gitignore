@@ -1,0 +1,26 @@
+# Ignore everything to start
+*
+
+# Folder-structure
+!*/
+!*/*/
+!*/*/*/
+!*/*/*/*/
+!*/*/*/*/*/
+!*/*/*/*/*/*/
+!*/*/*/*/*/*/*/
+
+# Misc
+!README
+!README.md
+!.gitignore
+!*.txt
+
+# TeX
+!*.tex
+
+# Python
+!*.py
+
+# Dot
+!*.dot
