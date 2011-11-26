@@ -2,7 +2,7 @@ CS3100 Final Project Specification:
 -----------------------------------
 
 Write Python routines to help experiment with non-deterministic push-down
-automata (we will call them \PDA" for short). Recall that we are studying NPDAs;
+automata (we will call them "PDA" for short). Recall that we are studying NPDAs;
 NPDA and DPDA are not equivalent in the sense of language recognition. You must
 provide a file/module of function definitions (or use Python classes) that
 maintain PDA configurations. Users must be able to input PDAs, and an input
