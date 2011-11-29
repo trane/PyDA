@@ -13,6 +13,6 @@ report. All coding should be original work
 
 #Project Members
 
-*Landon Gilbert-Bland
-*Andrew Kuhnhausen
-*Colton Myers
+* Landon Gilbert-Bland
+* Andrew Kuhnhausen
+* Colton Myers
