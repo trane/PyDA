@@ -11,8 +11,26 @@ be able to generate a PDF of their PDA with the configuration shown below it.
 You can imitate functionality found in JFLAP with due credits given in your
 report. All coding should be original work
 
+#Project Name
+
+PyDA
+
 #Project Members
 
-* Landon Gilbert-Bland
-* Andrew Kuhnhausen
-* Colton Myers
+* Landon Gilbert-Bland gilbertb@eng.utah.edu
+* Andrew Kuhnhausen kuhnhaus@eng.utah.edu
+* Colton Myers cmyers@eng.utah.edu
+
+#Project Goals
+
+* Implement an NPDA in Python
+* Print NDPA to .dot and .pdf files
+* Step through each possibility at the same time
+* Provide an interface for the user to input their own NPDA
+* Validate NPDAs, warning if not valid
+
+#Work Accomplished So Far
+
+* Website
+* Goal outlines
+* Design
