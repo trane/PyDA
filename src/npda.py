@@ -32,9 +32,10 @@ class NPDA(object):
             "Gamma": [ "0", "1", "z" ]
         };
         """
-        verify(pda);
+        self.verify(pda)
         self.inpt = string;
-        self.stack = pda['Z'];
+        self.stack = pda['Z']
+        self.pda = pda
 
     def normalize(pda):
         """ While JSON datastructure allows us portability, we will convert this
@@ -79,21 +80,21 @@ class NPDA(object):
         npda['q0'] = pda['q0']
         return npda
 
-    def verify(pda):
+    def verify(self, pda):
         """Ensures that this is a valid PDA"""
         assert pda['Sigma'] != {}, "Sigma cannot be empty"
         assert "" not in pda['Sigma'], "Sigma must not contain an empty string"
         assert pda['q0'] in pda['Q'], "q0 not in Q"
         assert pda['F'] <= pda['Q'], "Final state set too large"
         assert pda['Z'] in pda['Gamma'], "Initial stack symbol, not in Gamma"
-        assert domain(pda['Delta']) <= product(pda['Gamma'],
-            product(pda['Sigma']|set(""), pda['Q'])), "Delta too large"
+        assert pda['Delta'] <= self.product(pda['Gamma'],
+            self.product(pda['Sigma']|set(""), pda['Q'])), "Delta too large"
 
 
-    def domain(delta):
+    def domain(self, delta):
         """Compute the domain"""
         return set(delta.keys)
 
-    def product(S1, S2):
+    def product(self, S1, S2):
         """Compute the Cartesian product of S1 x S2"""
         return set((a, b) for a in S1 for b in S2)
