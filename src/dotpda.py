@@ -40,10 +40,10 @@ def prOrientation(fl):
     print(r'/* Orientation */', file=fl)
     print(r'orientation = portrait;', file=fl)
 
-def prEdges(fl, D):
+def prEdges(fl, npda):
     print(r'/* The graph itself */', file=fl)
-    print(r'""  -> ', dot_san_str(D["q0"]), ";", file=fl)
-    for QcQ in D["Delta"].items():
+    print(r'""  -> ', dot_san_str(npda["q0"]), ";", file=fl)
+    for QcQ in npda["Delta"].items():
         print(dot_san_str(QcQ[0][0]), r' -> ', dot_san_str(QcQ[1]), r'[label="', dot_san_str(QcQ[0][1]), r'"];', file=fl)
 
 def prClosing(fl):
@@ -51,16 +51,16 @@ def prClosing(fl):
     print(r"/* For further details, see the `dot' manual    */", file=fl)
     print(r"}", file=fl)
 
-def prNodeDefs(fl, D):
+def prNodeDefs(fl, npda):
     print(r'/* Node definitions */', file=fl)
     print(r'  "" [shape=plaintext];', file=fl)  # Start state arrow is from "" to I
     # All non-accepts are single circles
-    for q in D["Q"] - D["F"]:
+    for q in npda["Q"] - npda["F"]:
         prNonFinalNodeName(fl, q)
-    for q in D["F"]:
+    for q in npda["F"]:
         prFinalNodeName(fl, q)
 
-def dot_pda(D, fname):
+def dot_pda(npda, fname):
     """Generate a dot file with the automaton in it. Run the dot file through
     dot and generate a ps file.
     """
@@ -68,11 +68,11 @@ def dot_pda(D, fname):
     #-- digraph decl
     prDotHeader(fl)
     #-- node names and how to draw them
-    prNodeDefs_w_bh(fl, D)
+    prNodeDefs_w_bh(fl, npda)
     #-- orientation - now landscape
     prOrientation(fl)
     #-- edges
-    prEdges_w_bh(fl, D)
+    prEdges_w_bh(fl, npda)
     #-- closing
     prClosing(fl)
 
