@@ -87,13 +87,16 @@ class NPDA(object):
         assert pda['q0'] in pda['Q'], "q0 not in Q"
         assert pda['F'] <= pda['Q'], "Final state set too large"
         assert pda['Z'] in pda['Gamma'], "Initial stack symbol, not in Gamma"
-        assert pda['Delta'] <= self.product(pda['Gamma'],
-            self.product(pda['Sigma']|set(""), pda['Q'])), "Delta too large"
+        assert self.domain(pda['Delta']) <= self.product(
+            self.product(pda['Sigma']|set(""), pda['Q']), pda['Gamma']), "Delta too large"
 
 
     def domain(self, delta):
-        """Compute the domain"""
-        return set(delta.keys)
+        """Maps the State, input and top of stack to Qx(Sigma|{""})xGamma"""
+        domain = set()
+        for f in delta:
+            domain.add(((f[1], f[0]), f[2]))
+        return domain
 
     def product(self, S1, S2):
         """Compute the Cartesian product of S1 x S2"""
