@@ -1,6 +1,5 @@
 # Ignore everything to start
 *
-trane_test.py
 __pycache__
 __pycache__/*
 
@@ -28,3 +27,4 @@ __pycache__/*
 
 # Dot
 !*.dot
+trane_test.py
