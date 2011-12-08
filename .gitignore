@@ -1,5 +1,6 @@
 # Ignore everything to start
 *
+*_test.py
 
 # Folder-structure
 !*/
@@ -20,7 +21,6 @@
 # TeX
 !*.tex
 # testes testes
-*_test.py
 # Python
 !*.py
 
