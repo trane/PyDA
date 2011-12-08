@@ -15,6 +15,7 @@
 !README.md
 !.gitignore
 !*.txt
+!*.pyda
 
 # TeX
 !*.tex
