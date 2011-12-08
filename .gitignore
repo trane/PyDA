@@ -1,6 +1,6 @@
 # Ignore everything to start
 *
-*_test.py
+trane_test.py
 
 # Folder-structure
 !*/
