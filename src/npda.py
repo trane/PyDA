@@ -1,29 +1,3 @@
-# This is the NDPA object file, dig it.
-'''
-'Q': ('s0', 's1', 's2'),
-'Sigma': ('0', '1'),
-'Gamma': ('0','1','Z'),
-'Delta': {
-    's0': {
-        '0': { '0': ['s1', '0'], '1': ['s2', '0'] },
-        '1': { '0': ['s1', '0'], '1': ['s2', '0'] }
-    },
-    's1': {
-        '0': { '0': ['s1', '0'], '1': ['s2', '0'] },
-        '1': { '0': ['s1', '0'], '1': ['s2', '0'] }
-    },
-    's2': {
-        '0': { '0': ['s1', '0'], '1': ['s2', '0'] },
-        '1': { '0': ['s1', '0'], '1': ['s2', '0'] }
-    }
-},
-'q0': 's0',
-'Z': 'Z',
-'F': ('s2')
-}
-'''
-import json
-
 class NPDA(object):
     """
     NPDA is an object representing a Non-Deterministic Pushdown Automata.
@@ -37,35 +11,30 @@ class NPDA(object):
         q0: the start state (must exist in Q)
         Z: the initial stack symbol (must exist in Gamma)
         F: set of accepting states (must be a subset of Q)
-
+    And the string to run
     """
-    def __init__(self, pda):
+    def __init__(self, pda, string):
         """
         pda = {
-        'Q': ['s0', 's1', 's2'],
-        'Sigma': ['0', '1'],
-        'Gamma': ['0','1','Z'],
-        'Delta': {
-            's0': {
-                '0': { '0': ['s1', '0'], '1': ['s2', '0'] },
-                '1': { '0': ['s1', '0'], '1': ['s2', '0'] }
+            "q0": "s0",
+            "F": [ "s2" ],
+            "Q": [ "s0", "s1", "s2", "s2" ],
+            "Delta": {
+                "s2": { "1": { "1": [ [ "s2", "s1" ], "0" ], "0": [ [ "s1" ], "0" ] },
+                        "0": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] } },
+                "s1": { "1": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] },
+                        "0": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] } },
+                "s0": { "1": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] },
+                        "0": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] } }
             },
-            's1': {
-                '0': { '0': ['s1', '0'], '1': ['s2', '0'] },
-                '1': { '0': ['s1', '0'], '1': ['s2', '0'] }
-            },
-            's2': {
-                '0': { '0': ['s1', '0'], '1': ['s2', '0'] },
-                '1': { '0': ['s1', '0'], '1': ['s2', '0'] }
-            }
-        },
-        'q0': 's0',
-        'Z': 'Z',
-        'F': ['s2']
-        } };
+            "Z": "z",
+            "Sigma": [ "0", "1" ],
+            "Gamma": [ "0", "1", "z" ]
+        };
         """
-        pda = normalize(pda)
         verify(pda);
+        self.inpt = string;
+        self.stack = pda['Z'];
 
     def normalize(pda):
         """ While JSON datastructure allows us portability, we will convert this
@@ -112,6 +81,19 @@ class NPDA(object):
 
     def verify(pda):
         """Ensures that this is a valid PDA"""
-        assert Sigma != (), "Sigma cannot be empty"
-        assert "" not in Sigma, "Sigma must not contain an empty string"
-        assert q0 in Q
+        assert pda['Sigma'] != {}, "Sigma cannot be empty"
+        assert "" not in pda['Sigma'], "Sigma must not contain an empty string"
+        assert pda['q0'] in pda['Q'], "q0 not in Q"
+        assert pda['F'] <= pda['Q'], "Final state set too large"
+        assert pda['Z'] in pda['Gamma'], "Initial stack symbol, not in Gamma"
+        assert domain(pda['Delta']) <= product(pda['Gamma'],
+            product(pda['Sigma']|set(""), pda['Q'])), "Delta too large"
+
+
+    def domain(delta):
+        """Compute the domain"""
+        return set(delta.keys)
+
+    def product(S1, S2):
+        """Compute the Cartesian product of S1 x S2"""
+        return set((a, b) for a in S1 for b in S2)
