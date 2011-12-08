@@ -19,7 +19,8 @@
 
 # TeX
 !*.tex
-
+# testes testes
+*_test.py
 # Python
 !*.py
 
