@@ -107,6 +107,7 @@ class NPDA(object):
                         delta.add((init, inpt, stack_t, state, dest[1]))
         npda['Delta'] = delta
         npda['F'] = set(pda['F'])
+        npda['q0'] = pda['q0']
         return npda
 
     def verify(pda):
