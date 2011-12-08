@@ -15,31 +15,6 @@ class NPDA(object):
     """
     def __init__(self, pda, string):
         """
-        pda = {
-            "q0": "s0",
-            "F": [ "s2" ],
-            "Q": [ "s0", "s1", "s2", "s2" ],
-            "Delta": {
-                "s2": { "1": { "1": [ [ "s2", "s1" ], "0" ], "0": [ [ "s1" ], "0" ] },
-                        "0": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] } },
-                "s1": { "1": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] },
-                        "0": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] } },
-                "s0": { "1": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] },
-                        "0": { "1": [ [ "s2" ], "0" ], "0": [ [ "s1" ], "0" ] } }
-            },
-            "Z": "z",
-            "Sigma": [ "0", "1" ],
-            "Gamma": [ "0", "1", "z" ]
-        };
-        """
-        self.verify(pda)
-        self.inpt = string;
-        self.stack = pda['Z']
-        self.pda = pda
-
-    def normalize(pda):
-        """ While JSON datastructure allows us portability, we will convert this
-        into a more functional construct.
         PDAs will look like this:
         {
             'Q': {'s2', 's1', 's0'},
@@ -51,12 +26,6 @@ class NPDA(object):
                 ('s2', '0', '0', 's1', '0'),
                 ('s0', '0', '0', 's1', '0'),
                 ('s1', '0', '1', 's2', '0'),
-                ('s1', '1', '0', 's1', '0'),
-                ('s2', '1', '0', 's1', '0'),
-                ('s0', '0', '1', 's2', '0'),
-                ('s2', '1', '1', 's2', '0'),
-                ('s2', '1', '1', 's1', '0'),
-                ('s0', '1', '1', 's2', '0'),
                 ('s2', '0', '1', 's2', '0'),
                 ('s1', '0', '0', 's1', '0'),
                 ('s1', '1', '1', 's2', '0')
@@ -65,20 +34,10 @@ class NPDA(object):
             'Z': 'Z'
         }
         """
-        npda = dict()
-        npda['Q'] = set(pda['Q'])
-        npda['Sigma'] = set(pda['Sigma'])
-        npda['Gamma'] = set(pda['Gamma'])
-        delta = set()
-        for init,inputs in pda['Delta'].items():
-            for inpt,stack in inputs.items():
-                for stack_t,dest in stack.items():
-                    for state in dest[0]:
-                        delta.add((init, inpt, stack_t, state, dest[1]))
-        npda['Delta'] = delta
-        npda['F'] = set(pda['F'])
-        npda['q0'] = pda['q0']
-        return npda
+        self.verify(pda)
+        self.inpt = string;
+        self.stack = pda['Z']
+        self.pda = pda
 
     def verify(self, pda):
         """Ensures that this is a valid PDA"""
@@ -92,7 +51,8 @@ class NPDA(object):
 
 
     def domain(self, delta):
-        """Maps the State, input and top of stack to Qx(Sigma|{""})xGamma"""
+        """Maps the (p, a, A, q, alpha) -> ((a, p), A)
+        where a is input, p is state and A is the top of the stack"""
         domain = set()
         for f in delta:
             domain.add(((f[1], f[0]), f[2]))
