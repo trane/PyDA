@@ -5,6 +5,7 @@ This file includes all of our utility methods, such as the JSON normalize
 method, and functionality to print NPDA objects to .dot and .pdf files
 
 Public API:
+    load_pda(filename) - Loads pda from JSON file format
     normalize(pda) - Convert JSON object to our dictionary PDA representation
     pda2dot(npda_obj, pdaname) - Print npda_obj to 'pdaname.dot'
     pda2pdf(npda_obj, pdaname) - Print npda_obj to 'pdaname.pdf'
@@ -15,7 +16,7 @@ import json
 
 ## Main external API methods ##################################################
 
-def load_dfa(filename):
+def load_pda(filename):
     """
     Loads a dfa from a given json formatted file
     If the file loads and parses correctly, the pyda json structure is returned.
