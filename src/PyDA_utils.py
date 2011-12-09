@@ -26,7 +26,8 @@ def load_pda(filename):
         json_data = open(filename)
         pyda_struct = json.load(json_data)
         json_data.close()
-    except Exception:
+    except Exception as err:
+        print('Exception caught in load_pda: ', str(err))
         return None
 
     return pyda_struct
@@ -66,6 +67,7 @@ def normalize(pda):
     npda['Delta'] = delta
     npda['F'] = set(pda['F'])
     npda['q0'] = pda['q0']
+    npda['Z'] = pda['Z']
     return npda
 
 def pda2dot(npda_obj, pdaname):
