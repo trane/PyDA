@@ -49,7 +49,6 @@ class NPDA(object):
         assert self.domain(pda['Delta']) <= self.product(
             self.product(pda['Sigma']|set(""), pda['Q']), pda['Gamma']), "Delta too large"
 
-
     def domain(self, delta):
         """Maps the (p, a, A, q, alpha) -> ((a, p), A)
         where a is input, p is state and A is the top of the stack"""
@@ -62,24 +61,46 @@ class NPDA(object):
         """Compute the Cartesian product of S1 x S2"""
         return set((a, b) for a in S1 for b in S2)
 
+    def step_all(self):
+        """
+        Steps though every stepper that we have by 1 step.
+        Returns true if there are more states that can be stepped through, and
+        false if we cannot do any more stepping (ie if the string is not accepted
+        by the pda)
+        """
+        # The new list of valid states after we step every stepper by 1
+        new_valid_states = list()
+
+        # Step every stepper by 1, and create a list of the new valid states
+        for s in self.stepper_list:
+            valid_states = s.step()
+            new_valid_states.extends(valid_states)
+
+        # Set the new valid states to be the npda.stepper_list
+        self.stepper_list = list(new_valid_states)
+
+        # Return true if we can step again after this call, false otherwise
+        if not self.stepper_list:
+            return False
+        return True
+
+    def string_accepts(self):
+        """
+        Returns true if this string has been accepted (ie, if the string has been
+        fully run through the pda and ends on a final state)
+        """
+        for s in self.stepper_list:
+            if s.input == "":
+                if s.curr_state in self.pda['F']:
+                    return True
+        return False
+
+
     class Stepper(object):
-        # This is the NDPA object file, dig it.
 
-        # Steps though every stepper that we have by 1 step
-        def step_all(npda):
-            # The new list of valid states after we step every stepper by 1
-            new_valid_states = list()
-
-            # Step every stepper by 1, and create a list of the new valid states
-            for s in npda.stepper_list:
-                valid_states = step_stepper(s)
-                new_valid_states.extends(valid_states)
-
-            # Set the new valid states to be the npda.stepper_list
-            npda.stepper_list = list(new_valid_states)
-            return
-
-        # Steps through this stepper by 1 step, and returns a list of all valid states
-        # after this step
-        def step_stepper():
+        def step(self):
+            """
+            Steps through this stepper by 1 step, and returns a list of all valid states
+            after this step
+            """
             return;

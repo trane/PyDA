@@ -1,5 +1,7 @@
 # Ignore everything to start
 *
+__pycache__
+__pycache__/*
 
 # Folder-structure
 !*/
@@ -19,9 +21,10 @@
 
 # TeX
 !*.tex
-
+# testes testes
 # Python
 !*.py
 
 # Dot
 !*.dot
+trane_test.py
