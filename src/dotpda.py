@@ -1,3 +1,5 @@
+import os
+
 def dotsan_map(x):
     """A homomorphism. We need to sanitize set() also. Ugh!
     """
@@ -11,6 +13,11 @@ def dotsan_map(x):
         return "\)"
     else:
         return x
+
+def homos(S,f):
+    """String homomorphism wrt lambda f
+    """
+    return "".join(map(f,S))
 
 def dot_san_str(S):
     """Make dot like strings which are in set of states notation.
@@ -43,8 +50,10 @@ def prOrientation(fl):
 def prEdges(fl, npda):
     print(r'/* The graph itself */', file=fl)
     print(r'""  -> ', dot_san_str(npda["q0"]), ";", file=fl)
-    for QcQ in npda["Delta"].items():
-        print(dot_san_str(QcQ[0][0]), r' -> ', dot_san_str(QcQ[1]), r'[label="', dot_san_str(QcQ[0][1]), r'"];', file=fl)
+    for QcQ in npda["Delta"]:
+        print(dot_san_str(QcQ[0]), r' -> ', dot_san_str(QcQ[3]),
+              r'[label="', dot_san_str(QcQ[1]) + ',',
+              dot_san_str(QcQ[2]) + ';', dot_san_str(QcQ[4]), r'"];', file=fl)
 
 def prClosing(fl):
     print(r'/* Unix command: dot -Tps exdfa.dot >! exdfa.ps */', file=fl)
@@ -60,28 +69,27 @@ def prNodeDefs(fl, npda):
     for q in npda["F"]:
         prFinalNodeName(fl, q)
 
-def dot_pda(npda, fname):
-    """Generate a dot file with the automaton in it. Run the dot file through
-    dot and generate a ps file.
+def pda2dot(npda_obj, fname):
+    """Generate a .dot file with the given filename for the given NPDA object
     """
-    fl = open(fname, 'w')
-    #-- digraph decl
-    prDotHeader(fl)
-    #-- node names and how to draw them
-    prNodeDefs_w_bh(fl, npda)
-    #-- orientation - now landscape
-    prOrientation(fl)
-    #-- edges
-    prEdges_w_bh(fl, npda)
-    #-- closing
-    prClosing(fl)
+    with open(fname, 'w') as fl:
+        prDotHeader(fl)
+        prNodeDefs(fl, npda_obj.pda)
+        prOrientation(fl)
+        prEdges(fl, npda_obj.pda)
+        prClosing(fl)
 
-def prNFAEdges(fl, N):
-    """Suppress BH.
+def pda2pdf(npda_obj, pdaname):
+    """Generate a .pdf file for the given NPDA object and pda_name
     """
-    print(r'/* The graph itself */', file=fl)
-    print(r'""  -> ', dot_san_str(N["q0"]), ";", file=fl)
-    for QcQ in N["Delta"].items():
-        for nxt_state in QcQ[1]:
-            print(dot_san_str(QcQ[0][0]), r' -> ', dot_san_str(nxt_state), r'[label="', dot_san_str(ShowEps(QcQ[0][1])), r'"];', file=fl)
+    with open(pdaname + '.dot', 'w') as fl:
+        prDotHeader(fl)
+        prNodeDefs(fl, npda_obj.pda)
+        prOrientation(fl)
+        prEdges(fl, npda_obj.pda)
+        prClosing(fl)
+
+    os.system("dot -Tps " + pdaname + ".dot > " + pdaname + ".ps")
+    os.system("ps2pdf13 " + pdaname + ".ps")
+    os.system("rm " + pdaname + ".dot " + pdaname + ".ps")
 
