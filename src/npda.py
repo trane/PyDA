@@ -48,8 +48,11 @@ class NPDA(object):
         assert pda['q0'] in pda['Q'], "q0 not in Q"
         assert pda['F'] <= pda['Q'], "Final state set too large"
         assert pda['Z'] in pda['Gamma'], "Initial stack symbol, not in Gamma"
+        for inpt in pda['Delta']:
+            assert inpt[1] in pda['Sigma']|set("@"), "Invalid input in Delta"
         assert self.domain(pda['Delta']) <= self.product(
-            self.product(pda['Sigma']|set(""), pda['Q']), pda['Gamma']), "Delta too large"
+            self.product(
+                pda['Sigma']|set("@"), pda['Q']), pda['Gamma']|set("@")), "Delta too large"
 
     def domain(self, delta):
         """Maps the (p, a, A, q, alpha) -> ((a, p), A)
