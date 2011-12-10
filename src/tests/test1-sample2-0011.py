@@ -6,7 +6,7 @@
 from npda import *
 from PyDA_utils import *
 
-the_pda = normalize(load_pda('samples/sample2-0n1n.pyda'))
+the_pda = normalize(load_pda('../samples/sample2-0n1n.pyda'))
 n = NPDA(the_pda, "0011")
 
 for i in range(10):
