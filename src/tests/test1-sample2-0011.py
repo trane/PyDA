@@ -9,8 +9,9 @@ from PyDA_utils import *
 the_pda = normalize(load_pda('../samples/sample2-0n1n.pyda'))
 n = NPDA(the_pda, "0011")
 
-for i in range(10):
-    n.step_all()
+can_step = True;
+while can_step == True:
+    can_step = n.step_all()
     if n.accepts():
         print("WOOHOO!")
         break
