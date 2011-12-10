@@ -98,7 +98,7 @@ class NPDA(object):
         NPDA.
         """
         for s in self.stepper_list:
-            if s.input == "":
+            if s.inpt == "":
                 if s.state in self.pda['F']:
                     if len(s.stack) <= 1:
                         return True
