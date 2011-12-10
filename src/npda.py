@@ -101,9 +101,16 @@ class NPDA(object):
 
     class Stepper(object):
 
+        def __init__(self, inpt, state, stack):
+            """
+            Initialize the new Stepper object given an input string
+            (representing the remaining input to be processed), the current
+            state, and the current stack (represented as a string).
+            """
+
         def step(self):
             """
-            Steps through this stepper by 1 step, and returns a list of all valid states
-            after this step
+            Steps the current Stepper object, returning a list of new Stepper
+            objects resulting from any transitions.
             """
-            return;
+            return None;
