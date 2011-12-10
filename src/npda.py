@@ -38,6 +38,8 @@ class NPDA(object):
         self.inpt = string;
         self.stack = pda['Z']
         self.pda = pda
+        initial_stepper = Stepper(self.inpt, self.pda['q0'], self.pda['Z'])
+        self.stepper_list = [initial_stepper]
 
     def verify(self, pda):
         """Ensures that this is a valid PDA"""
