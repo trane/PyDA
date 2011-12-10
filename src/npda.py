@@ -44,7 +44,8 @@ class NPDA(object):
     def verify(self, pda):
         """Ensures that this is a valid PDA"""
         assert pda['Sigma'] != {}, "Sigma cannot be empty"
-        assert "" not in pda['Sigma'], "Sigma must not contain an empty string"
+        assert "" not in pda['Sigma'], "Sigma must not contain the empty string"
+        assert "@" not in pda['Sigma'], "Sigma must not contain the empty string"
         assert pda['q0'] in pda['Q'], "q0 not in Q"
         assert pda['F'] <= pda['Q'], "F not a subset of Q"
         assert pda['F'] & pda['Q'] == pda['F'], "F is not subset of Q"
