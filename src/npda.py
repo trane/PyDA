@@ -113,9 +113,32 @@ class NPDA(object):
             self.state = state
             self.stack = stack
 
-        def step(self):
+        def step(self, npda):
             """
             Steps the current Stepper object, returning a list of new Stepper
-            objects resulting from any transitions.
+            objects resulting from any transitions, based on the given npda
             """
-            return None;
+            steppers = list()
+
+            for d in npda.pda['Delta']:
+                if d[0] == self.state:
+                    if d[1] == self.inpt[:1] or d[1] == '@':
+                        # Top of stack is the end of the string, and so we also
+                        # have to reverse the result using [::-1]
+                        if d[2] == self.stack[-len(d[2]):][::-1] or d[2] == '@':
+                            new_stack = self.stack[:]
+                            # Pop the specified characters from the stack
+                            if not d[2] == '@':
+                                new_stack = new_stack[:-len(d[2])]
+                            # Push the new characters to the stack
+                            if not d[4] == '@':
+                                new_stack = new_stack.extend(d[4][::-1])
+                            # Consume input character (if not eps (@))
+                            if not d[1] == '@':
+                                new_inpt = self.inpt[1:]
+                            # Create the new Stepper object including new state
+                            # and add to the steppers list
+                            steppers.append(Stepper(inpt, self.state, new_stack))
+
+            # Return finished list of steppers
+            return steppers;
