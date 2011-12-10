@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Test sample2 with the string "0011"
+# npda.py and PyDA_utils.py should be symlinked into same directory
 
 from npda import *
 from PyDA_utils import *
