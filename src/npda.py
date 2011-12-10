@@ -76,17 +76,17 @@ class NPDA(object):
         # Step every stepper by 1, and create a list of the new valid states
         for s in self.stepper_list:
             valid_states = s.step()
-            new_valid_states.extends(valid_states)
+            new_valid_states.extend(valid_states)
 
         # Set the new valid states to be the npda.stepper_list
         self.stepper_list = list(new_valid_states)
 
-        # Return true if we can step again after this call, false otherwise
-        if not self.stepper_list:
+        # Return True if we can step again after this call, False otherwise
+        if not self.stepper_list: # An empty list registers as False
             return False
         return True
 
-    def string_accepts(self):
+    def accepts(self):
         """
         Returns true if this string has been accepted (ie, if the string has
         been fully run through the pda and ends on a final state) and the stack
