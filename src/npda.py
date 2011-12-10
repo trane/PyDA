@@ -107,6 +107,9 @@ class NPDA(object):
             (representing the remaining input to be processed), the current
             state, and the current stack (represented as a string).
             """
+            self.inpt = inpt
+            self.state = state
+            self.stack = stack
 
         def step(self):
             """
