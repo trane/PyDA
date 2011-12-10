@@ -79,7 +79,7 @@ class NPDA(object):
 
         # Step every stepper by 1, and create a list of the new valid states
         for s in self.stepper_list:
-            valid_states = s.step()
+            valid_states = s.step(self)
             new_valid_states.extend(valid_states)
 
         # Set the new valid states to be the npda.stepper_list
