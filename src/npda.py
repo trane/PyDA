@@ -46,7 +46,8 @@ class NPDA(object):
         assert pda['Sigma'] != {}, "Sigma cannot be empty"
         assert "" not in pda['Sigma'], "Sigma must not contain an empty string"
         assert pda['q0'] in pda['Q'], "q0 not in Q"
-        assert pda['F'] <= pda['Q'], "Final state set too large"
+        assert pda['F'] <= pda['Q'], "F not a subset of Q"
+        assert pda['F'] & pda['Q'] == pda['F'], "F is not subset of Q"
         assert pda['Z'] in pda['Gamma'], "Initial stack symbol, not in Gamma"
         for inpt in pda['Delta']:
             assert inpt[1] in pda['Sigma']|set("@"), "Invalid input in Delta"
