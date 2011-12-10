@@ -38,13 +38,16 @@ class NPDA(object):
         self.inpt = string;
         self.stack = pda['Z']
         self.pda = pda
+        initial_stepper = Stepper(self.inpt, self.pda['q0'], self.pda['Z'])
+        self.stepper_list = [initial_stepper]
 
     def verify(self, pda):
         """Ensures that this is a valid PDA"""
         assert pda['Sigma'] != {}, "Sigma cannot be empty"
         assert "" not in pda['Sigma'], "Sigma must not contain an empty string"
         assert pda['q0'] in pda['Q'], "q0 not in Q"
-        assert pda['F'] <= pda['Q'], "Final state set too large"
+        assert pda['F'] <= pda['Q'], "F not a subset of Q"
+        assert pda['F'] & pda['Q'] == pda['F'], "F is not subset of Q"
         assert pda['Z'] in pda['Gamma'], "Initial stack symbol, not in Gamma"
         for inpt in pda['Delta']:
             assert inpt[1] in pda['Sigma']|set("@"), "Invalid input in Delta"
@@ -76,34 +79,75 @@ class NPDA(object):
 
         # Step every stepper by 1, and create a list of the new valid states
         for s in self.stepper_list:
-            valid_states = s.step()
-            new_valid_states.extends(valid_states)
+            valid_states = s.step(self)
+            new_valid_states.extend(valid_states)
 
         # Set the new valid states to be the npda.stepper_list
         self.stepper_list = list(new_valid_states)
 
-        # Return true if we can step again after this call, false otherwise
+    def can_step(self):
+        """
+        Checks if we can step through another iteration of the pda, or if the string
+        can no longer step again, and as such does not satisfy the pda
+        """
         if not self.stepper_list:
             return False
         return True
 
-    def string_accepts(self):
+    def accepts(self):
         """
-        Returns true if this string has been accepted (ie, if the string has been
-        fully run through the pda and ends on a final state)
+        Returns true if this string has been accepted (ie, if the string has
+        been fully run through the pda and ends on a final state) and the stack
+        either is empty or consists only of the "Z" character as defined in the
+        NPDA.
         """
         for s in self.stepper_list:
-            if s.input == "":
-                if s.curr_state in self.pda['F']:
-                    return True
+            if s.inpt == "":
+                if s.state in self.pda['F']:
+                    if len(s.stack) <= 1:
+                        return True
         return False
 
 
-    class Stepper(object):
+class Stepper(object):
 
-        def step(self):
-            """
-            Steps through this stepper by 1 step, and returns a list of all valid states
-            after this step
-            """
-            return;
+    def __init__(self, inpt, state, stack):
+        """
+        Initialize the new Stepper object given an input string
+        (representing the remaining input to be processed), the current
+        state, and the current stack (represented as a string).
+        """
+        self.inpt = inpt
+        self.state = state
+        self.stack = stack
+
+    def step(self, npda):
+        """
+        Steps the current Stepper object, returning a list of new Stepper
+        objects resulting from any transitions, based on the given npda
+        """
+        steppers = list()
+
+        for d in npda.pda['Delta']:
+            if d[0] == self.state:
+                if d[1] == self.inpt[:1] or d[1] == '@':
+                    # Top of stack is the end of the string, and so we also
+                    # have to reverse the result using [::-1]
+                    if d[2] == self.stack[-len(d[2]):][::-1] or d[2] == '@':
+                        new_stack = self.stack[:]
+                        new_inpt = self.inpt
+                        # Pop the specified characters from the stack
+                        if not d[2] == '@':
+                            new_stack = new_stack[:-len(d[2])]
+                        # Push the new characters to the stack
+                        if not d[4] == '@':
+                            new_stack = new_stack + d[4][::-1]
+                        # Consume input character (if not eps (@))
+                        if not d[1] == '@':
+                            new_inpt = new_inpt[1:]
+                        # Create the new Stepper object including new state
+                        # and add to the steppers list
+                        steppers.append(Stepper(new_inpt, d[3], new_stack))
+
+        # Return finished list of steppers
+        return steppers;
