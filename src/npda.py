@@ -86,13 +86,16 @@ class NPDA(object):
 
     def string_accepts(self):
         """
-        Returns true if this string has been accepted (ie, if the string has been
-        fully run through the pda and ends on a final state)
+        Returns true if this string has been accepted (ie, if the string has
+        been fully run through the pda and ends on a final state) and the stack
+        either is empty or consists only of the "Z" character as defined in the
+        NPDA.
         """
         for s in self.stepper_list:
             if s.input == "":
-                if s.curr_state in self.pda['F']:
-                    return True
+                if s.state in self.pda['F']:
+                    if len(s.stack) <= 1:
+                        return True
         return False
 
 
