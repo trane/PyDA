@@ -105,44 +105,45 @@ class NPDA(object):
         return False
 
 
-    class Stepper(object):
+class Stepper(object):
 
-        def __init__(self, inpt, state, stack):
-            """
-            Initialize the new Stepper object given an input string
-            (representing the remaining input to be processed), the current
-            state, and the current stack (represented as a string).
-            """
-            self.inpt = inpt
-            self.state = state
-            self.stack = stack
+    def __init__(self, inpt, state, stack):
+        """
+        Initialize the new Stepper object given an input string
+        (representing the remaining input to be processed), the current
+        state, and the current stack (represented as a string).
+        """
+        self.inpt = inpt
+        self.state = state
+        self.stack = stack
 
-        def step(self, npda):
-            """
-            Steps the current Stepper object, returning a list of new Stepper
-            objects resulting from any transitions, based on the given npda
-            """
-            steppers = list()
+    def step(self, npda):
+        """
+        Steps the current Stepper object, returning a list of new Stepper
+        objects resulting from any transitions, based on the given npda
+        """
+        steppers = list()
 
-            for d in npda.pda['Delta']:
-                if d[0] == self.state:
-                    if d[1] == self.inpt[:1] or d[1] == '@':
-                        # Top of stack is the end of the string, and so we also
-                        # have to reverse the result using [::-1]
-                        if d[2] == self.stack[-len(d[2]):][::-1] or d[2] == '@':
-                            new_stack = self.stack[:]
-                            # Pop the specified characters from the stack
-                            if not d[2] == '@':
-                                new_stack = new_stack[:-len(d[2])]
-                            # Push the new characters to the stack
-                            if not d[4] == '@':
-                                new_stack = new_stack.extend(d[4][::-1])
-                            # Consume input character (if not eps (@))
-                            if not d[1] == '@':
-                                new_inpt = self.inpt[1:]
-                            # Create the new Stepper object including new state
-                            # and add to the steppers list
-                            steppers.append(Stepper(inpt, self.state, new_stack))
+        for d in npda.pda['Delta']:
+            if d[0] == self.state:
+                if d[1] == self.inpt[:1] or d[1] == '@':
+                    # Top of stack is the end of the string, and so we also
+                    # have to reverse the result using [::-1]
+                    if d[2] == self.stack[-len(d[2]):][::-1] or d[2] == '@':
+                        new_stack = self.stack[:]
+                        new_inpt = self.inpt
+                        # Pop the specified characters from the stack
+                        if not d[2] == '@':
+                            new_stack = new_stack[:-len(d[2])]
+                        # Push the new characters to the stack
+                        if not d[4] == '@':
+                            new_stack = new_stack + d[4][::-1]
+                        # Consume input character (if not eps (@))
+                        if not d[1] == '@':
+                            new_inpt = new_inpt[1:]
+                        # Create the new Stepper object including new state
+                        # and add to the steppers list
+                        steppers.append(Stepper(new_inpt, d[3], new_stack))
 
-            # Return finished list of steppers
-            return steppers;
+        # Return finished list of steppers
+        return steppers;
