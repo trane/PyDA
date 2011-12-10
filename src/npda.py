@@ -85,8 +85,12 @@ class NPDA(object):
         # Set the new valid states to be the npda.stepper_list
         self.stepper_list = list(new_valid_states)
 
-        # Return True if we can step again after this call, False otherwise
-        if not self.stepper_list: # An empty list registers as False
+    def can_step(self):
+        """
+        Checks if we can step through another iteration of the pda, or if the string
+        can no longer step again, and as such does not satisfy the pda
+        """
+        if not self.stepper_list:
             return False
         return True
 

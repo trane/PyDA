@@ -6,12 +6,21 @@
 from npda import *
 from PyDA_utils import *
 
-the_pda = normalize(load_pda('../samples/sample2-0n1n.pyda'))
-n = NPDA(the_pda, "0011")
+# The string we will be testing
+test_string = "0011"
 
-can_step = True;
-while can_step == True:
-    can_step = n.step_all()
+# Load the pda from the json file into our program
+the_pda = normalize(load_pda('../samples/sample2-0n1n.pyda'))
+n = NPDA(the_pda, test_string)
+
+# Step this string through the pda
+while n.can_step:
+    n.step_all()
     if n.accepts():
-        print("WOOHOO!")
         break
+
+if n.accepts():
+    print("The string " + test_string + " satisfies this pda.")
+else:
+    print("The string " + test_string + " does not satisfies this pda.")
+
