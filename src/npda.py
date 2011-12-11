@@ -43,6 +43,7 @@ class NPDA(object):
         initial_stepper = Stepper(self.inpt, self.pda['q0'], self.pda['Z'])
         self.stepper_list = [initial_stepper]
         self.frozen_list = list()
+        self.reject_list = list()
 
     def verify(self, pda):
         """Ensures that this is a valid PDA"""
@@ -80,14 +81,19 @@ class NPDA(object):
         """
         # The new list of valid states after we step every stepper by 1
         new_valid_states = list()
+        new_reject_states = list()
 
         # Step every stepper by 1, and create a list of the new valid states
         for s in self.stepper_list:
             valid_states = s.step(self)
+            if s not in valid_states:
+                new_reject_states.append(s)
             new_valid_states.extend(valid_states)
 
         # Set the new valid states to be the npda.stepper_list
         self.stepper_list = list(new_valid_states)
+        # Set the rejected states
+        self.reject_list = new_reject_states
 
     def can_step(self):
         """
