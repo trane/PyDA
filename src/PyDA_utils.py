@@ -171,3 +171,15 @@ def prNodeDefs(fl, npda):
     for q in npda["F"]:
         prFinalNodeName(fl, q)
 
+def check_acceptance(npda, test_str):
+    """
+    Runs the test_str through the pda, and returns True if the string
+    satisfies the npda, False if it doesn't
+    """
+    while n.can_step():
+        n.step_all()
+        if n.accepts():
+            return True
+
+    return False
+
