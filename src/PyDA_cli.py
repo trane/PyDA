@@ -29,6 +29,50 @@ def print_states(npda):
     for s in npda.frozen_list:
         print("" + str(s.ident) + "\t" + s.state + "\t" + s.inpt + "\n" + s.stack + "\n\n")
 
+def freeze_helper(npda, sid):
+    if sid == None:
+        print_step_help()
+        return
+
+    try:
+        ident = int(sid)
+    except:
+        print(sid + ": is not a valid ID")
+        return
+
+    if npda.freeze(ident) == True:
+        print(sid + ": Frozen")
+    else:
+        print(sid + ": is not currently stepping")
+
+def thaw_helper(npda, sid):
+    if sid == None:
+        print_step_help()
+        return
+
+    try:
+        ident = int(sid)
+    except:
+        print(sid + ": is not a valid ID")
+        return
+
+    if npda.thaw(ident) == True:
+        print(sid + ": Thawed")
+    else:
+        print(sid + ": is not currently frozen")
+
+def pdf_helper(npda, filename):
+    if filename == None:
+        print_step_help()
+    else:
+        pda2pdf(npda, filename)
+
+def dot_helper(npda, filename):
+    if filename == None:
+        print_step_help()
+    else:
+        pda2dot(npda, filename)
+
 def main():
     # Verify arguements using argparse
     # pdf_file
@@ -84,49 +128,5 @@ def main():
             dot_helper(n, arg)
         else:
             print_step_help()
-
-def freeze_helper(npda, sid):
-    if sid == None:
-        print_step_help()
-        return
-
-    try:
-        ident = int(sid)
-    except:
-        print(sid + ": is not a valid ID")
-        return
-
-    if npda.freeze(ident) == True:
-        print(sid + ": Frozen")
-    else:
-        print(sid + ": is not currently stepping")
-
-def thaw_helper(npda, sid):
-    if sid == None:
-        print_step_help()
-        return
-
-    try:
-        ident = int(sid)
-    except:
-        print(sid + ": is not a valid ID")
-        return
-
-    if npda.thaw(ident) == True:
-        print(sid + ": Thawed")
-    else:
-        print(sid + ": is not currently frozen")
-
-def pdf_helper(npda, filename):
-    if filename == None:
-        print_step_help()
-    else:
-        pda2pdf(npda, filename)
-
-def dot_helper(npda, filename):
-    if filename == None:
-        print_step_help()
-    else:
-        pda2dot(npda, filename)
 
 main()
