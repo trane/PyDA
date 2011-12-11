@@ -1,17 +1,16 @@
 import argparse
+import sys
 from npda import *
 from PyDA_utils import *
 
-#parser = argparse.ArgumentParser(description='Run an NPDA on a string.')
-#parser.add_argument('string', metavar='"S"', type=str, nargs='+',
-#                           help='any number of strings')
-#parser.add_argument('-f', '--file', dest='file', help='loads an JSON encoded NPDA and runs the string(s) on it')
-#parser.add_argument('-p', '--print', dest='print', help='print an NPDA loaded from a file')
-#args = parser.parse_args()
-#parser.print_help()
-
-def to_dot():
-    print("")
+parser = argparse.ArgumentParser(description='Run an NPDA on a string.')
+parser.add_argument('string', nargs='?',
+                           help='input string for the NPDA (defaults 000111)',
+                           default='000111' )
+parser.add_argument('-f', '--file', help='loads an JSON encoded \
+        NPDA and runs the string(s) on it (defaults to sample2-0n1n.pyda)',
+        default='samples/sample2-0n1n.pyda', required=False)
+args = parser.parse_args()
 
 def print_step_help():
     print("q: Quit the program")
@@ -73,24 +72,29 @@ def dot_helper(npda, filename):
     else:
         pda2dot(npda, filename)
 
+def load(filename):
+    return normalize(load_pda('samples/sample2-0n1n.pyda'))
+
 def main():
     # Verify arguements using argparse
     # pdf_file
     # step
     # test_string
-
     # Create the npda
-    step = True 
-    test_string = '000111'
-    pda = normalize(load_pda('samples/sample2-0n1n.pyda'))
-    n = NPDA(pda, test_string)
+    filename = args.file
+    string = args.string
+    print("Loading " + filename)
+    print("Running on string: " + string)
+    step = True
+    pda = load(filename)
+    n = NPDA(pda, string)
 
     # Default behaivor, check if the string satisfies the pda
     if(step == False):
         if check_acceptance(n) == True:
-            print("The string \"" + test_string + "\" satisfies this pda.")
+            print("The string \"" + string + "\" satisfies this pda.")
         else:
-            print("The string \"" + test_string + "\" does not satisfies this pda.")
+            print("The string \"" + string + "\" does not satisfies this pda.")
         return
 
     # Main event loop for stepping through the program
