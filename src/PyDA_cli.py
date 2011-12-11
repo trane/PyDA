@@ -62,18 +62,18 @@ def main():
         elif cmd == "s":
             n.step_all()
         elif cmd == "p":
-            print_state(n)
+            print_state(n)                 # TODO - IMPLEMENT ME
         elif cmd == "f":
             if not arg:
                 print_step_help()
-            if n.freeze(arg) == True:
+            if n.freeze(arg) == True:      # TODO - IMPLEMENT ME (landon working on now)
                 print("arg: Frozen")
             else:
                 print_step_help()
         elif cmd == "t":
             if not arg:
                 print_step_help()
-            if n.thaw(arg) == True:
+            if n.thaw(arg) == True:         # TODO - IMPLEMENT ME (landon working on now)
                 print("arg: Thawed")
             else:
                 print_step_help()
