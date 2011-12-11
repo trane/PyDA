@@ -1,3 +1,5 @@
+id_assigner = 0
+
 class NPDA(object):
     """
     NPDA is an object representing a Non-Deterministic Pushdown Automata.
@@ -40,6 +42,7 @@ class NPDA(object):
         self.pda = pda
         initial_stepper = Stepper(self.inpt, self.pda['q0'], self.pda['Z'])
         self.stepper_list = [initial_stepper]
+        self.frozen_list = list()
 
     def verify(self, pda):
         """Ensures that this is a valid PDA"""
@@ -89,7 +92,7 @@ class NPDA(object):
     def can_step(self):
         """
         Checks if we can step through another iteration of the pda, or if the string
-        can no longer step again, and as such does not satisfy the pda
+        can no longer step again, and as such does not satisfy the pda.
         """
         if not self.stepper_list:
             return False
@@ -109,6 +112,30 @@ class NPDA(object):
                         return True
         return False
 
+    def freeze(self, ident):
+        '''
+        Moves a stepper with the given id from the stepper_list to the frozen_list.
+        Returns true if a stepper was moved to the frozen_list, false otherwise
+        '''
+        for s in stepper_list:
+            if s.ident == ident:
+                stepper_list.remove(s)
+                frozen_list.append(s)
+                return True
+        return False
+
+    def thaw(self, ident):
+        '''
+        Moves a stepper with the given id from the frozen_list to the stepper_list.
+        Returns true if a stepper was moved to the stepper_list, false otherwise
+        '''
+        for s in frozen_list:
+            if s.ident == ident:
+                frozen_list.remove(s)
+                stepper_list.append(s)
+                return True
+        return False
+
 
 class Stepper(object):
 
@@ -118,9 +145,12 @@ class Stepper(object):
         (representing the remaining input to be processed), the current
         state, and the current stack (represented as a string).
         """
+        global id_assigner
         self.inpt = inpt
         self.state = state
         self.stack = stack
+        self.ident = id_assigner
+        id_assigner += 1
 
     def step(self, npda):
         """

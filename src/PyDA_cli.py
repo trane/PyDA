@@ -2,13 +2,13 @@ import argparse
 from npda import *
 from PyDA_utils import *
 
-parser = argparse.ArgumentParser(description='Run an NPDA on a string.')
-parser.add_argument('string', metavar='"S"', type=str, nargs='+',
-                           help='any number of strings')
-parser.add_argument('-f', '--file', dest='file', help='loads an JSON encoded NPDA and runs the string(s) on it')
-parser.add_argument('-p', '--print', dest='print', help='print an NPDA loaded from a file')
-args = parser.parse_args()
-parser.print_help()
+#parser = argparse.ArgumentParser(description='Run an NPDA on a string.')
+#parser.add_argument('string', metavar='"S"', type=str, nargs='+',
+#                           help='any number of strings')
+#parser.add_argument('-f', '--file', dest='file', help='loads an JSON encoded NPDA and runs the string(s) on it')
+#parser.add_argument('-p', '--print', dest='print', help='print an NPDA loaded from a file')
+#args = parser.parse_args()
+#parser.print_help()
 
 def to_dot():
     print("")
@@ -22,6 +22,8 @@ def print_step_help():
     print("pdf FILENAME: Creates a pdf file of this NPDA with the given FILENAME")
     print("dot FILENAME: Creates a dot file of this NPDA with the given FILENAME")
 
+def print_state(npda):
+    print('todo')
 
 def main():
     # Verify arguements using argparse
@@ -30,8 +32,10 @@ def main():
     # test_string
 
     # Create the npda
-    pda = normalize(load_pda(pda_file))
-    n = NPDA(the_pda, test_string)
+    step = False
+    test_string = '000111'
+    pda = normalize(load_pda('samples/sample2-0n1n.pyda'))
+    n = NPDA(pda, test_string)
 
     # Default behaivor, check if the string satisfies the pda
     if(step == False):
@@ -44,7 +48,7 @@ def main():
     # Main event loop for stepping through the program
     while True:
         # Get and parse input from the user
-        usr_inpt = input("Enter a command: "))
+        usr_inpt = input("Enter a command: ")
         argv = usr_inpt.split()
         argc = len(argv)
         if argc == 0:
@@ -61,22 +65,23 @@ def main():
             return
         elif cmd == "s":
             n.step_all()
+            print_state(n)
         elif cmd == "p":
             print_state(n)                 # TODO - IMPLEMENT ME
         elif cmd == "f":
             if not arg:
                 print_step_help()
-            if n.freeze(arg) == True:      # TODO - IMPLEMENT ME (landon working on now)
-                print("arg: Frozen")
+            if n.freeze(arg) == True:
+                print(arg + ": Frozen")
             else:
-                print_step_help()
+                print(arg + ": is not a valid ID")
         elif cmd == "t":
             if not arg:
                 print_step_help()
-            if n.thaw(arg) == True:         # TODO - IMPLEMENT ME (landon working on now)
-                print("arg: Thawed")
+            if n.thaw(arg) == True:
+                print(arg + ": Thawed")
             else:
-                print_step_help()
+                print(arg + ": is not a valid ID")
         elif cmd == "pdf":
             if not arg:
                 print_step_help()
@@ -87,3 +92,5 @@ def main():
             pda2dot(n, arg)
         else:
             print_step_help()
+
+main()
