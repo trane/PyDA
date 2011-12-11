@@ -117,10 +117,10 @@ class NPDA(object):
         Moves a stepper with the given id from the stepper_list to the frozen_list.
         Returns true if a stepper was moved to the frozen_list, false otherwise
         '''
-        for s in stepper_list:
+        for s in self.stepper_list:
             if s.ident == ident:
-                stepper_list.remove(s)
-                frozen_list.append(s)
+                self.stepper_list.remove(s)
+                self.frozen_list.append(s)
                 return True
         return False
 
@@ -129,10 +129,10 @@ class NPDA(object):
         Moves a stepper with the given id from the frozen_list to the stepper_list.
         Returns true if a stepper was moved to the stepper_list, false otherwise
         '''
-        for s in frozen_list:
+        for s in self.frozen_list:
             if s.ident == ident:
-                frozen_list.remove(s)
-                stepper_list.append(s)
+                self.frozen_list.remove(s)
+                self.stepper_list.append(s)
                 return True
         return False
 

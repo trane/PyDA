@@ -32,7 +32,7 @@ def main():
     # test_string
 
     # Create the npda
-    step = False
+    step = True 
     test_string = '000111'
     pda = normalize(load_pda('samples/sample2-0n1n.pyda'))
     n = NPDA(pda, test_string)
@@ -48,20 +48,23 @@ def main():
     # Main event loop for stepping through the program
     while True:
         # Get and parse input from the user
-        usr_inpt = input("Enter a command: ")
+        usr_inpt = input("\nEnter a command: ")
         argv = usr_inpt.split()
         argc = len(argv)
         if argc == 0:
             print_step_help()
+            continue
         elif argc == 1:
-            cmd = cmd_list[0]
+            cmd = argv[0]
             arg = None
         else:
-            cmd = cmd_list[0]
-            arg = cmd_list[1]
+            cmd = argv[0]
+            arg = argv[1]
 
+        # TODO - break this up into lots of helper functions
         # Process the command text 
         if cmd == "q":
+            print("Exiting the program")
             return
         elif cmd == "s":
             n.step_all()
@@ -69,26 +72,28 @@ def main():
         elif cmd == "p":
             print_state(n)                 # TODO - IMPLEMENT ME
         elif cmd == "f":
-            if not arg:
+            if arg == None:
                 print_step_help()
-            if n.freeze(arg) == True:
+            elif n.freeze(arg) == True:
                 print(arg + ": Frozen")
             else:
                 print(arg + ": is not a valid ID")
         elif cmd == "t":
-            if not arg:
+            if arg == None:
                 print_step_help()
-            if n.thaw(arg) == True:
+            elif n.thaw(arg) == True:
                 print(arg + ": Thawed")
             else:
                 print(arg + ": is not a valid ID")
         elif cmd == "pdf":
-            if not arg:
+            if arg == None:
                 print_step_help()
+                continue
             pda2pdf(n, arg)
         elif cmd == "dot":
-            if not arg:
+            if arg == None:
                 print_step_help()
+                continue
             pda2dot(n, arg)
         else:
             print_step_help()
