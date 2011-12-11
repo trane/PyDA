@@ -112,7 +112,7 @@ def dot_helper(npda, filename):
 def load(filename):
     return normalize(load_pda(filename))
 
-def main(filename, string):
+def main(filename, string, step):
     # Verify arguements using argparse
     # pdf_file
     # step
@@ -120,7 +120,6 @@ def main(filename, string):
     # Create the npda
     print("Loading " + filename)
     print("Running on string: " + string)
-    step = True
     pda = load(filename)
     n = NPDA(pda, string)
 
