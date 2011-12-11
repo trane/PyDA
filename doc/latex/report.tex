@@ -3,6 +3,8 @@
 % Last Change: Mon Nov 07 08:00 PM 2011 M
 %
 \documentclass[a4paper]{report}
+\usepackage{amsmath}
+\usepackage{minted}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \begin{document}
@@ -33,8 +35,112 @@ freeze/thaw threads as you step and print to both \texttt{.dot} and
 \end{abstract}
 
 \section*{Shared Tasks}
+Much of the work done on PyDA was done together, including formally defining our
+data structures, working out the flow from one module to another, and many other
+small but significant decisions.
 \subsection*{JSON Data Structure}
+The reason we chose JSON as our data structure, is that it is language agnostic
+(much like XML) but lends itself well for encoding the intended structure of a
+PDA within the definition itself. The ability to define any PDA with JSON allows
+anyone to write compatible software in any language and any platform. While JSON
+is quite portable, there were some interesting limitations that complicated the
+structure.
+\subsubsection*{Validation at the Data Structure Level}
+JSON allows us to do some low-level validation on the intended input by using
+hashes to ensure that no duplicates are allowed where they shouldn't be. Since
+each $\delta$ function must be of the form: $(p,a,A,q,\alpha)\in\delta$ and
+those tuples must be unique, we found which elements would be repeated and
+hashed them $(p, a, A, q)$. Then set $\alpha$ in an Array, since there can be
+multiple push elements per hashed tuple $(p,a,A,q)$. The following is the output
+of our $\delta$:
+\begin{minted}{javascript}
+"Delta": {
+    "s0": { "@": { "Z": { "s1": ["SZ"] } } },
+    "s1": { "a": { "a": { "s1": ["@"] } },
+            "b": { "b": { "s1": ["@"] } },
+            "c": { "c": { "s1": ["@"] } },
+            "@": { "Z": { "s1": ["Z"] },
+                   "I": { "s1": ["aK", "aJ"] },
+                   "A": { "s1": ["aA", "B"] },
+                   "K": { "s1": ["bJ"] },
+                   "I": { "s1": ["aJ"] },
+                   "B": { "s1": ["bB", "Bc", "@"] },
+                   "S": { "s1": ["I", "C"] },
+                   "J": { "s1": ["@", "bJc"] },
+                   "C": { "s1": ["aaA", "B"] }
+                 }
+          }
+}
+\end{minted}
+Notice that each element in $(p,a,A,q)$ is uniquely hashed, while $\alpha$ can
+be one or more values to be pushed onto the stack.
+\subsubsection*{The Final Structure}
+For sets $Q, \Sigma, \Gamma, F$, we used Arrays and for single elements $q0, Z$
+we used strings for the values of our hash. The final structure (asg7's L2 as an
+example):
+\begin{minted}{javascript}
+{
+    "q0": "s0",
+    "F": [ "s2" ],
+    "Q": [ "s0", "s1", "s2" ],
+    "Delta": {
+        "s0": { "@": { "Z": { "s1": ["SZ"] } } },
+        "s1": { "a": { "a": { "s1": ["@"] } },
+                "b": { "b": { "s1": ["@"] } },
+                "c": { "c": { "s1": ["@"] } },
+                "@": { "Z": { "s1": ["Z"] },
+                       "I": { "s1": ["aK", "aJ"] },
+                       "A": { "s1": ["aA", "B"] },
+                       "K": { "s1": ["bJ"] },
+                       "I": { "s1": ["aJ"] },
+                       "B": { "s1": ["bB", "Bc", "@"] },
+                       "S": { "s1": ["I", "C"] },
+                       "J": { "s1": ["@", "bJc"] },
+                       "C": { "s1": ["aaA", "B"] }
+                     }
+              }
+    },
+    "Z": "Z",
+    "Sigma": [ "a", "b", "c" ],
+    "Gamma": [ "c", "b", "a", "I", "K", "A", "J", "B", "S", "C", "Z" ]
+}
+\end{minted}
+
 \subsection*{NPDA Data Structure}
+The NPDA structure is based more on the functional, formal definition of a PDA.
+Since Python allows structures like tuples, we are able to convert from JSON to
+a more formal representation. $\delta$ is a tuple of $(p,a,A,q,\alpha)$,
+$\Sigma, F, Q, \Gamma$ are sets and $q0, Z$ are single strings. Using asg7's L2
+as an example, our Python data structure is:
+\begin{minted}{python}
+{
+    'q0': 's0',
+    'F': {'s2'},
+    'Q': {'s2', 's1', 's0'},
+    'Delta': {
+        ('s1', '@', 'J', 's1', 'bJc'),
+        ('s1', '@', 'K', 's1', 'bJ'),
+        ('s1', '@', 'B', 's1', '@'),
+        ('s1', 'b', 'b', 's1', '@'),
+        ('s1', '@', 'B', 's1', 'bB'),
+        ('s1', '@', 'B', 's1', 'Bc'),
+        ('s1', 'a', 'a', 's1', '@'),
+        ('s1', '@', 'A', 's1', 'B'),
+        ('s0', '@', 'Z', 's1', 'SZ'),
+        ('s1', 'c', 'c', 's1', '@'),
+        ('s1', '@', 'A', 's1', 'aA'),
+        ('s1', '@', 'C', 's1', 'B'),
+        ('s1', '@', 'S', 's1', 'I'),
+        ('s1', '@', 'C', 's1', 'aaA'),
+        ('s1', '@', 'S', 's1', 'C'),
+        ('s1', '@', 'Z', 's1', 'Z'),
+        ('s1', '@', 'I', 's1', 'aJ'),
+        ('s1', '@', 'J', 's1', '@')},
+    'Z': 'Z',
+    'Sigma': {'a', 'c', 'b'},
+    'Gamma': {'a', 'A', 'c', 'b', 'I', 'K', 'J', 'C', 'S', 'B', 'Z'}
+}
+\end{minted}
 \section*{Landon Gilbert-Bland}
 \section*{Andrew Kuhnhausen}
 \section*{Colton Myers}
