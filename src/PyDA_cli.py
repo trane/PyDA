@@ -32,7 +32,7 @@ def print_state(s):
     print(format_state(s))
 
 def format_state(s):
-    return str(s.ident) + "\t" + s.state + "\t" + s.inpt + "\n" + s.stack
+    return str(s.ident) + "\t" + s.state + "\t" + s.inpt + "\t" + s.stack
 
 def color_state(s, color):
     result = ""+codes[color]
@@ -52,6 +52,7 @@ def print_step_help():
     print("dot FILENAME: Creates a dot file of this NPDA with the given FILENAME")
 
 def print_states(npda):
+    print ("ID\tstate\tinput\tstack")
     for s in npda.stepper_list:
         if len(s.stack) <= 1 and len(s.inpt) == 0:
             print_accept(s)
