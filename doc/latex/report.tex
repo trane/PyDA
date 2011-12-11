@@ -1,0 +1,35 @@
+%        File: project.tex
+%     Created: Mon Nov 07 08:00 PM 2011 M
+% Last Change: Mon Nov 07 08:00 PM 2011 M
+%
+\documentclass[a4paper]{report}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\begin{document}
+\title{ % Upper part of the page
+    \textsc{\LARGE CS 3100}\\[1.5cm]
+    \textsc{\Large Final Project Report}\\[0.5cm]
+    % Title
+    \HRule \\[0.4cm]
+    { \huge \bfseries PyDA - Push Down Automata}\\
+    { \small https://github.com/trane/PyDA }\\
+    \HRule \\[1.5cm]
+}
+\author{
+    Landon Gilbert-Bland (gilbertb)\\ %u0262954\\
+    Andrew Kuhnhausen (kuhnhaus)\\% u0275126\\
+    Colton Myers (cmyers)\\% u0502549\\
+}
+\maketitle
+
+\begin{abstract}
+We have written a Python implementation of a Non-Deterministic Pushdown
+Automaton called PyDA. For portability for other languages and the web, we have
+defined our NPDA data structure using Javascript Object Notation (JSON). All
+interaction with PyDA is through a Command Line Interface (CLI) which allows you
+to load JSON encoded files, input test strings, step through the NPDA,
+freeze/thaw threads as you step and print to both \texttt{.dot} and
+\texttt{.pdf} files.  This imitates the functionality of JFLAP.
+\end{abstract}
+\end{document}
+
