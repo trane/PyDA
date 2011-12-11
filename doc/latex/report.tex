@@ -141,8 +141,43 @@ as an example, our Python data structure is:
     'Gamma': {'a', 'A', 'c', 'b', 'I', 'K', 'J', 'C', 'S', 'B', 'Z'}
 }
 \end{minted}
+
 \section*{Landon Gilbert-Bland}
 \section*{Andrew Kuhnhausen}
+I focused on the formal verification, conversion and CLI elements of the
+assignment.
+\subsection*{verify()}
+\texttt{verify} ensures that $NPDA=(Q,\Sigma,\Gamma,\delta,q0,Z,F)$ is valid.
+The following were asserted in the \texttt{verify()} method:
+\begin{itemize}
+    \item $\Sigma \ne \{\epsilon\}$
+    \item $\epsilon \notin \Sigma$
+    \item $q0\in Q$
+    \item $F \subseteq Q$
+    \item $Z \in \Gamma$
+    \item $\{\forall a \in \delta | a \in \Sigma^{*}\}$
+    \item $a\in\Sigma\cup\{\epsilon\}$
+    \item $A\in\Gamma$
+    \item $\alpha\in\Gamma^{*}$
+    \item $Q\times(\Sigma\cup\{\epsilon\})\times\Gamma\rightarrow Q\times\Gamma^{*}$
+\end{itemize}
+\subsection*{normalize()}
+\texttt{normalize()} is a mapping function from $JSON\rightarrow NPDA$. The
+mappings are as follows:
+\begin{itemize}
+    \item $q0\rightarrow q0$
+    \item $Z\rightarrow Z$
+    \item $\{\forall x\in F \rightarrow F=\{x_0\cdots x_n\}\}$
+    \item $\{\forall x\in Q \rightarrow Q=\{x_0\cdots x_n\}\}$
+    \item $\{\forall x\in\Gamma \rightarrow \Gamma=\{x_0\cdots x_n\}\}$
+    \item $\{\forall x\in\Sigma \rightarrow \Sigma=\{x_0\cdots x_n\}\}$
+    \item $\{\\\forall p\in\delta \rightarrow
+                \indent\forall a\in \{a\} \rightarrow
+                \forall A\in \{A\} \rightarrow
+                \forall q\in \{q\} \rightarrow
+                \forall \alpha\in \{\alpha\} \rightarrow
+                \{(p,a,A,q,a_0),\cdots,(p,a,A,q,a_n)\}\\\}$
+\end{itemize}
 \section*{Colton Myers}
 \end{document}
 
