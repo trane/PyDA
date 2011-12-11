@@ -55,6 +55,10 @@ class NPDA(object):
         assert pda['Z'] in pda['Gamma'], "Initial stack symbol, not in Gamma"
         for inpt in pda['Delta']:
             assert inpt[1] in pda['Sigma']|set("@"), "Invalid input in Delta"
+            for c in inpt[2]:
+                assert c in pda['Gamma']|set("@"), "Push not in Gamma*"
+            for c in inpt[4]:
+                assert c in pda['Gamma']|set("@"), "Pop not in Gamma*"
         assert self.domain(pda['Delta']) <= self.product(
             self.product(
                 pda['Sigma']|set("@"), pda['Q']), pda['Gamma']|set("@")), "Delta too large"
