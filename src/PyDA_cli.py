@@ -112,7 +112,7 @@ def dot_helper(npda, filename):
 def load(filename):
     return normalize(load_pda(filename))
 
-def main(filename, string):
+def main(filename, string, accept):
     # Verify arguements using argparse
     # pdf_file
     # step
@@ -120,16 +120,16 @@ def main(filename, string):
     # Create the npda
     print("Loading " + filename)
     print("Running on string: " + string)
-    step = True
     pda = load(filename)
     n = NPDA(pda, string)
 
-    # Default behaivor, check if the string satisfies the pda
-    if(step == False):
+    # Non-default behaivor, check if the string satisfies the pda without manually
+    # stepping through it
+    if(accept == True):
         if check_acceptance(n) == True:
             print("The string \"" + string + "\" satisfies this pda.")
         else:
-            print("The string \"" + string + "\" does not satisfies this pda.")
+            print("The string \"" + string + "\" does not satisfy this pda.")
         return
 
     # Main event loop for stepping through the program
