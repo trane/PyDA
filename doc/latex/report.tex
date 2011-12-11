@@ -2,7 +2,7 @@
 %     Created: Mon Nov 07 08:00 PM 2011 M
 % Last Change: Mon Nov 07 08:00 PM 2011 M
 %
-\documentclass[a4paper]{report}
+\documentclass[a4paper]{article}
 \usepackage{amsmath}
 \usepackage{minted}
 
@@ -23,7 +23,9 @@
     Colton Myers (cmyers)\\% u0502549\\
 }
 \maketitle
-
+\newpage
+\tableofcontents
+\newpage
 \begin{abstract}
 We have written a Python implementation of a Non-Deterministic Pushdown
 Automaton called PyDA. For portability for other languages and the web, we have
@@ -33,19 +35,21 @@ to load JSON encoded files, input test strings, step through the NPDA,
 freeze/thaw threads as you step and print to both \texttt{.dot} and
 \texttt{.pdf} files.  This imitates the functionality of JFLAP.
 \end{abstract}
+\newpage
+\setcounter{secnumdepth}{3}
 
-\section*{Shared Tasks}
+\section{Shared Tasks}\label{ch:Shared Tasks}
 Much of the work done on PyDA was done together, including formally defining our
 data structures, working out the flow from one module to another, and many other
 small but significant decisions.
-\subsection*{JSON Data Structure}
+\subsection{JSON Data Structure}
 The reason we chose JSON as our data structure, is that it is language agnostic
 (much like XML) but lends itself well for encoding the intended structure of a
 PDA within the definition itself. The ability to define any PDA with JSON allows
 anyone to write compatible software in any language and any platform. While JSON
 is quite portable, there were some interesting limitations that complicated the
 structure.
-\subsubsection*{Validation at the Data Structure Level}
+\subsubsection{Validation at the Data Structure Level}
 JSON allows us to do some low-level validation on the intended input by using
 hashes to ensure that no duplicates are allowed where they shouldn't be. Since
 each $\delta$ function must be of the form: $(p,a,A,q,\alpha)\in\delta$ and
@@ -74,7 +78,7 @@ of our $\delta$:
 \end{minted}
 Notice that each element in $(p,a,A,q)$ is uniquely hashed, while $\alpha$ can
 be one or more values to be pushed onto the stack.
-\subsubsection*{The Final Structure}
+\subsubsection{The Final Structure}
 For sets $Q, \Sigma, \Gamma, F$, we used Arrays and for single elements $q0, Z$
 we used strings for the values of our hash. The final structure (asg7's L2 as an
 example):
@@ -106,7 +110,7 @@ example):
 }
 \end{minted}
 
-\subsection*{NPDA Data Structure}
+\subsection{NPDA Data Structure}
 The NPDA structure is based more on the functional, formal definition of a PDA.
 Since Python allows structures like tuples, we are able to convert from JSON to
 a more formal representation. $\delta$ is a tuple of $(p,a,A,q,\alpha)$,
@@ -141,7 +145,7 @@ as an example, our Python data structure is:
     'Gamma': {'a', 'A', 'c', 'b', 'I', 'K', 'J', 'C', 'S', 'B', 'Z'}
 }
 \end{minted}
-\subsection*{CLI}
+\section{CLI}
 We decided on a Command Line Interface over a GUI. The interface is simple, we
 provide the user with the ability to load their own files and/or strings. Help
 about usage is provided to the user through the \texttt{-h, --help} arguments.
@@ -176,11 +180,11 @@ pdf FILENAME: Creates a pdf file of this NPDA with the given FILENAME
 dot FILENAME: Creates a dot file of this NPDA with the given FILENAME
 \end{verbatim}
 
-\section*{Landon Gilbert-Bland}
-\section*{Andrew Kuhnhausen}
+\section{Landon Gilbert-Bland}
+\section{Andrew Kuhnhausen}
 I focused on the formal verification, conversion and CLI elements of the
 assignment.
-\subsection*{verify()}
+\subsection{verify()}
 \texttt{verify} ensures that $NPDA=(Q,\Sigma,\Gamma,\delta,q0,Z,F)$ is valid.
 The following were asserted in the \texttt{verify()} method:
 \begin{itemize}
@@ -195,7 +199,7 @@ The following were asserted in the \texttt{verify()} method:
     \item $\alpha\in\Gamma^{*}$
     \item $Q\times(\Sigma\cup\{\epsilon\})\times\Gamma\rightarrow Q\times\Gamma^{*}$
 \end{itemize}
-\subsection*{normalize()}
+\subsection{normalize()}
 \texttt{normalize()} is a mapping function from $JSON\rightarrow NPDA$. The
 mappings are as follows:
 \begin{itemize}
@@ -211,6 +215,6 @@ mappings are as follows:
                 q_{\alpha_{JSON}} \rightarrow\\
                 \delta_{py}=\{(p,a,A,q,a_0),\cdots,(p,a,A,q,a_n)\}\}$
 \end{itemize}
-\section*{Colton Myers}
+\section{Colton Myers}
 \end{document}
 
