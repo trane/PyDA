@@ -141,6 +141,40 @@ as an example, our Python data structure is:
     'Gamma': {'a', 'A', 'c', 'b', 'I', 'K', 'J', 'C', 'S', 'B', 'Z'}
 }
 \end{minted}
+\subsection*{CLI}
+We decided on a Command Line Interface over a GUI. The interface is simple, we
+provide the user with the ability to load their own files and/or strings. Help
+about usage is provided to the user through the \texttt{-h, --help} arguments.
+\begin{verbatim}
+./PyDA.py -h
+usage: PyDA.py [-h] [-a] [-f FILE] [test_string]
+
+Run an NPDA on a string.
+
+positional arguments:
+  test_string           input string for the NPDA (defaults 000111)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a, --accept          Runs the string against the NPDA to check for
+                        acceptance, without manually stepping through it
+  -f FILE, --file FILE  loads an JSON encoded NPDA and runs the string(s) on
+                        it (defaults to sample2-0n1n.pyda)
+\end{verbatim}
+
+Every option is optional. When \texttt{PyDA} is run, the user is provided with a
+simple command prompt: \texttt{Enter a command (h for help):} if the user types
+\texttt{h}, they are provided with the following output:
+\begin{verbatim}
+Enter a command (h for help): h
+q: Quit the program
+s: Steps ever thread that isn't frozen by one position
+p: Print the current state of all the threads
+f ID: Freeze the thead with ID from stepping
+t ID: Thaw the thread ID to continue stepping
+pdf FILENAME: Creates a pdf file of this NPDA with the given FILENAME
+dot FILENAME: Creates a dot file of this NPDA with the given FILENAME
+\end{verbatim}
 
 \section*{Landon Gilbert-Bland}
 \section*{Andrew Kuhnhausen}
