@@ -52,7 +52,6 @@ class NPDA(object):
         assert "@" not in pda['Sigma'], "Sigma must not contain the empty string"
         assert pda['q0'] in pda['Q'], "q0 not in Q"
         assert pda['F'] <= pda['Q'], "F not a subset of Q"
-        assert pda['F'] & pda['Q'] == pda['F'], "F is not subset of Q"
         assert pda['Z'] in pda['Gamma'], "Initial stack symbol, not in Gamma"
         for inpt in pda['Delta']:
             assert inpt[1] in pda['Sigma']|set("@"), "Invalid input in Delta"
@@ -91,7 +90,7 @@ class NPDA(object):
             new_valid_states.extend(valid_states)
 
         # Set the new valid states to be the npda.stepper_list
-        self.stepper_list = list(new_valid_states)
+        self.stepper_list = new_valid_states
         # Set the rejected states
         self.reject_list = new_reject_states
 
