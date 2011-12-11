@@ -5,6 +5,7 @@
 \documentclass[a4paper]{article}
 \usepackage{amsmath}
 \usepackage{minted}
+\usepackage[pdftex]{graphicx}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \begin{document}
@@ -149,6 +150,7 @@ as an example, our Python data structure is:
 We decided on a Command Line Interface over a GUI. The interface is simple, we
 provide the user with the ability to load their own files and/or strings. Help
 about usage is provided to the user through the \texttt{-h, --help} arguments.
+\subsection{--help}
 \begin{verbatim}
 ./PyDA.py -h
 usage: PyDA.py [-h] [-a] [-f FILE] [test_string]
@@ -165,8 +167,10 @@ optional arguments:
   -f FILE, --file FILE  loads an JSON encoded NPDA and runs the string(s) on
                         it (defaults to sample2-0n1n.pyda)
 \end{verbatim}
+Every option is optional.
 
-Every option is optional. When \texttt{PyDA} is run, the user is provided with a
+\subsection{Available Commands}
+When \texttt{PyDA} is run, the user is provided with a
 simple command prompt: \texttt{Enter a command (h for help):} if the user types
 \texttt{h}, they are provided with the following output:
 \begin{verbatim}
@@ -179,6 +183,15 @@ t ID: Thaw the thread ID to continue stepping
 pdf FILENAME: Creates a pdf file of this NPDA with the given FILENAME
 dot FILENAME: Creates a dot file of this NPDA with the given FILENAME
 \end{verbatim}
+
+\subsection{Stepping}
+\subsubsection{Accept and Reject}
+Running off an NPDA that accepts $0^{n}1^{n}$ on the string $000111$:\\\\
+$\includegraphics[scale=1.0]{stepping_accept.png}$
+\subsubsection{Freeze and Thaw}
+Running the same NPDA and string, we can freeze and thaw:\\\\
+$\includegraphics[scale=1.0]{freeze_thaw.png}$
+
 
 \section{Landon Gilbert-Bland}
 \section{Andrew Kuhnhausen}
