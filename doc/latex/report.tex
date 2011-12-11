@@ -167,16 +167,15 @@ mappings are as follows:
 \begin{itemize}
     \item $q0\rightarrow q0$
     \item $Z\rightarrow Z$
-    \item $\{\forall x\in F \rightarrow F=\{x_0\cdots x_n\}\}$
-    \item $\{\forall x\in Q \rightarrow Q=\{x_0\cdots x_n\}\}$
-    \item $\{\forall x\in\Gamma \rightarrow \Gamma=\{x_0\cdots x_n\}\}$
-    \item $\{\forall x\in\Sigma \rightarrow \Sigma=\{x_0\cdots x_n\}\}$
-    \item $\{\\\forall p\in\delta \rightarrow
-                \indent\forall a\in \{a\} \rightarrow
-                \forall A\in \{A\} \rightarrow
-                \forall q\in \{q\} \rightarrow
-                \forall \alpha\in \{\alpha\} \rightarrow
-                \{(p,a,A,q,a_0),\cdots,(p,a,A,q,a_n)\}\\\}$
+    \item $\{\forall x\in F_{JSON} \rightarrow F_{py}=\{x_0\cdots x_n\}\}$
+    \item $\{\forall x\in Q_{JSON} \rightarrow Q_{py}=\{x_0\cdots x_n\}\}$
+    \item $\{\forall x\in\Gamma_{JSON} \rightarrow \Gamma_{py}=\{x_0\cdots x_n\}\}$
+    \item $\{\forall x\in\Sigma_{JSON} \rightarrow \Sigma_{py}=\{x_0\cdots x_n\}\}$
+    \item $\{\forall (p,a,A,q,\alpha)\in\delta_{JSON},\delta_{a_{JSON}},
+                a_{A_{JSON}},
+                A_{q_{JSON}},
+                q_{\alpha_{JSON}} \rightarrow\\
+                \delta_{py}=\{(p,a,A,q,a_0),\cdots,(p,a,A,q,a_n)\}\}$
 \end{itemize}
 \section*{Colton Myers}
 \end{document}
