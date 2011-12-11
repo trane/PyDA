@@ -38,7 +38,7 @@ def color_state(s, color):
     result = ""+codes[color]
     result += format_state(s)
     result += codes['reset']
-    result += "\n\n"
+    #result += "\n\n"
     return result
 
 
