@@ -1,5 +1,4 @@
 import argparse
-import sys
 from npda import *
 from PyDA_utils import *
 
@@ -12,6 +11,47 @@ parser.add_argument('-f', '--file', help='loads an JSON encoded \
         default='samples/sample2-0n1n.pyda', required=False)
 args = parser.parse_args()
 
+esc = "\x1b["
+
+codes = {}
+codes["reset"]     = esc + "39;49;00m"
+
+dark_colors  = ["black", "darkred", "darkgreen", "brown", "darkblue",
+                "purple", "teal", "lightgray"]
+light_colors = ["darkgray", "red", "green", "yellow", "blue",
+                "fuchsia", "turquoise", "white"]
+
+x = 30
+for d, l in zip(dark_colors, light_colors):
+    codes[d] = esc + "%im" % x
+    codes[l] = esc + "%i;01m" % x
+    x += 1
+
+del d, l, x
+
+def print_accept(s):
+    print(color_state(s, 'green'))
+
+def print_frozen(s):
+    print(color_state(s, 'blue'))
+
+def print_reject(s):
+    print(color_state(s, 'red'))
+
+def print_state(s):
+    print(format_state(s))
+
+def format_state(s):
+    return str(s.ident) + "\t" + s.state + "\t" + s.inpt + "\n" + s.stack
+
+def color_state(s, color):
+    result = ""+codes[color]
+    result += format_state(s)
+    result += codes['reset']
+    result += "\n\n"
+    return result
+
+
 def print_step_help():
     print("q: Quit the program")
     print("s: Steps ever thread that isn't frozen by one position")
@@ -23,10 +63,16 @@ def print_step_help():
 
 def print_states(npda):
     for s in npda.stepper_list:
-        print("" + str(s.ident) + "\t" + s.state + "\t" + s.inpt + "\n" + s.stack + "\n\n")
+        if len(s.stack) <= 1 and len(s.inpt) == 0:
+            print_accept(s)
+        else:
+            print_state(s)
 
     for s in npda.frozen_list:
-        print("" + str(s.ident) + "\t" + s.state + "\t" + s.inpt + "\n" + s.stack + "\n\n")
+        print_frozen(s)
+
+    for s in npda.reject_list:
+        print_reject(s)
 
 def freeze_helper(npda, sid):
     if sid == None:
@@ -73,7 +119,7 @@ def dot_helper(npda, filename):
         pda2dot(npda, filename)
 
 def load(filename):
-    return normalize(load_pda('samples/sample2-0n1n.pyda'))
+    return normalize(load_pda(filename))
 
 def main():
     # Verify arguements using argparse
@@ -100,7 +146,7 @@ def main():
     # Main event loop for stepping through the program
     while True:
         # Get and parse input from the user
-        usr_inpt = input("\nEnter a command: ")
+        usr_inpt = input("\nEnter a command (h for help): ")
         argv = usr_inpt.split()
         argc = len(argv)
         if argc == 0:
