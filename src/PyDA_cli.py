@@ -13,6 +13,16 @@ parser.print_help()
 def to_dot():
     print("")
 
+def print_step_help():
+    print("q: Quit the program")
+    print("s: Steps ever thread that isn't frozen by one position")
+    print("p: Print the current state of all the threads")
+    print("f ID: Freeze the thead with ID from stepping")
+    print("t ID: Thaw the thread ID to continue stepping")
+    print("pdf FILENAME: Creates a pdf file of this NPDA with the given FILENAME")
+    print("dot FILENAME: Creates a dot file of this NPDA with the given FILENAME")
+
+
 def main():
     # Verify arguements using argparse
     # pdf_file
@@ -33,31 +43,47 @@ def main():
 
     # Main event loop for stepping through the program
     while True:
-        # Get intput from user: 
-        # TODO - break this up to multiple works (for things like pdf FILENAME)
-        # or maybe just use argparse here as well if possible.
-        cmd = input("Enter a command: ")
+        # Get and parse input from the user
+        usr_inpt = input("Enter a command: "))
+        argv = usr_inpt.split()
+        argc = len(argv)
+        if argc == 0:
+            print_step_help()
+        elif argc == 1:
+            cmd = cmd_list[0]
+            arg = None
+        else:
+            cmd = cmd_list[0]
+            arg = cmd_list[1]
 
-        # Process the user input
+        # Process the command text 
         if cmd == "q":
             return
-        else if cmd == "s":
-            return
-        else if cmd == "p":
-            return
-        else if cmd == "f":
-            return
-        else if cmd == "t":
-            return
-        else if cmd == "pdf":
-            return
-        else if cmd == "dot":
-            return
+        elif cmd == "s":
+            n.step_all()
+        elif cmd == "p":
+            print_state(n)
+        elif cmd == "f":
+            if not arg:
+                print_step_help()
+            if n.freeze(arg) == True:
+                print("arg: Frozen")
+            else:
+                print_step_help()
+        elif cmd == "t":
+            if not arg:
+                print_step_help()
+            if n.thaw(arg) == True:
+                print("arg: Thawed")
+            else:
+                print_step_help()
+        elif cmd == "pdf":
+            if not arg:
+                print_step_help()
+            pda2pdf(n, arg)
+        elif cmd == "dot":
+            if not arg:
+                print_step_help()
+            pda2dot(n, arg)
         else:
-            print("q: Quit the program")
-            print("s: Steps ever thread that isn't frozen by one position")
-            print("p: Print the current state of all the threads")
-            print("f ID: Freeze the thead with ID from stepping")
-            print("t ID: Thaw the thread ID to continue stepping")
-            print("pdf FILENAME: Creates a pdf file of this NPDA with the given filename")
-            print("dot FILENAME: Creates a dot file of this NPDA with the given filename")
+            print_step_help()
