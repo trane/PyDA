@@ -1,15 +1,5 @@
-import argparse
 from npda import *
 from PyDA_utils import *
-
-parser = argparse.ArgumentParser(description='Run an NPDA on a string.')
-parser.add_argument('string', nargs='?',
-                           help='input string for the NPDA (defaults 000111)',
-                           default='000111' )
-parser.add_argument('-f', '--file', help='loads an JSON encoded \
-        NPDA and runs the string(s) on it (defaults to sample2-0n1n.pyda)',
-        default='samples/sample2-0n1n.pyda', required=False)
-args = parser.parse_args()
 
 esc = "\x1b["
 
@@ -121,14 +111,12 @@ def dot_helper(npda, filename):
 def load(filename):
     return normalize(load_pda(filename))
 
-def main():
+def main(filename, string):
     # Verify arguements using argparse
     # pdf_file
     # step
     # test_string
     # Create the npda
-    filename = args.file
-    string = args.string
     print("Loading " + filename)
     print("Running on string: " + string)
     step = True
@@ -179,4 +167,3 @@ def main():
         else:
             print_step_help()
 
-main()
