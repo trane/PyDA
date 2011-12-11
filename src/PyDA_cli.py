@@ -33,13 +33,31 @@ def main():
 
     # Main event loop for stepping through the program
     while True:
-        #   Get intput from user:
-        #   q = quit
-        #   f ID = freeze the stepper with that id
-        #   s = steps through everything that isn't frozen by 1 step
-        #   p = print the current data from the steppers, distingusihg between frozen and active
-        #   pdf FILENAME = create a pdf document of the current pda
-        #   dot FILENAME = create a dotty document of the current pda
-        #
-        #   Act according to the input. Need to decide how to close (think don't close the
-        #   program until explicatally told to by the user pressing q)
+        # Get intput from user: 
+        # TODO - break this up to multiple works (for things like pdf FILENAME)
+        # or maybe just use argparse here as well if possible.
+        cmd = input("Enter a command: ")
+
+        # Process the user input
+        if cmd == "q":
+            return
+        else if cmd == "s":
+            return
+        else if cmd == "p":
+            return
+        else if cmd == "f":
+            return
+        else if cmd == "t":
+            return
+        else if cmd == "pdf":
+            return
+        else if cmd == "dot":
+            return
+        else:
+            print("q: Quit the program")
+            print("s: Steps ever thread that isn't frozen by one position")
+            print("p: Print the current state of all the threads")
+            print("f ID: Freeze the thead with ID from stepping")
+            print("t ID: Thaw the thread ID to continue stepping")
+            print("pdf FILENAME: Creates a pdf file of this NPDA with the given filename")
+            print("dot FILENAME: Creates a dot file of this NPDA with the given filename")
