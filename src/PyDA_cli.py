@@ -20,25 +20,24 @@ for d, l in zip(dark_colors, light_colors):
 del d, l, x
 
 def print_accept(s):
-    print(color_state(s, 'green'))
+    print(color_state(s, 'green', 'Accept'))
 
 def print_frozen(s):
-    print(color_state(s, 'blue'))
+    print(color_state(s, 'blue', 'Frozen'))
 
 def print_reject(s):
-    print(color_state(s, 'red'))
+    print(color_state(s, 'red', 'Reject'))
 
 def print_state(s):
-    print(format_state(s))
+    print(format_state(s, 'Active'))
 
-def format_state(s):
-    return str(s.ident) + "\t" + s.state + "\t" + s.inpt + "\t" + s.stack
+def format_state(s, status):
+    return status + "\t" + str(s.ident) + "\t" + s.state + "\t" + s.inpt + "\t" + s.stack
 
-def color_state(s, color):
+def color_state(s, color, status):
     result = ""+codes[color]
-    result += format_state(s)
+    result += format_state(s, status)
     result += codes['reset']
-    #result += "\n\n"
     return result
 
 
@@ -52,7 +51,7 @@ def print_step_help():
     print("dot FILENAME: Creates a dot file of this NPDA with the given FILENAME")
 
 def print_states(npda):
-    print ("ID\tstate\tinput\tstack")
+    print ("status\tID\tstate\tinput\tstack")
     for s in npda.stepper_list:
         if len(s.stack) <= 1 and len(s.inpt) == 0:
             print_accept(s)
