@@ -232,6 +232,147 @@ mappings are as follows:
                 q_{\alpha_{JSON}} \rightarrow\\
                 \delta_{py}=\{(p,a,A,q,a_0),\cdots,(p,a,A,q,a_n)\}\}$
 \end{itemize}
+
 \section{Colton Myers}
+
+My main assignments were PDF output (via Dot), and the main methods which were
+to be used to ``step'' our NPDAs.
+
+\subsection{Dot/PDF Output}
+
+The first was fairly straightforward.  Because on paper, PDAs and NPDAs look
+very similar to *FAs which we had done earlier, I could reuse much of the code
+provided to use for printing those automatons to PDFs.  The one major
+difference is the way the edges are printed.  This resulted in the following
+method which printed the edges from the given NPDA object to the Dot file:
+
+\begin{minted}{python}
+def prEdges(fl, npda):
+    print(r'/* The graph itself */', file=fl)
+    print(r'""  -> ', dot_san_str(npda["q0"]), ";", file=fl)
+    for QcQ in npda["Delta"]:
+        print(dot_san_str(QcQ[0]), r' -> ', dot_san_str(QcQ[3]),
+              r'[label="', dot_san_str(QcQ[1]) + ',',
+              dot_san_str(QcQ[2]) + ';', dot_san_str(QcQ[4]), r'"];', file=fl)
+\end{minted}
+
+Note that we used the same notation on the edges as we used in our assignments
+and in class, namely \texttt{input, pop; push}.  The only time that the Dot
+output is unwieldy is in the case of a CFG to PDA conversion, where there are
+many transitions from one state to itself.
+
+The PDF output method, \texttt{pda2pdf()}, just added a few lines to the Dot
+output method, \texttt{pda2dot()}, so I will show just the former here:
+
+\begin{minted}{python}
+def pda2pdf(npda_obj, pdaname):
+    """Generate a .pdf file for the given NPDA object and pda_name
+
+    NOTE:  The .pdf part of the filename should not be included in pdaname
+    """
+    with open(pdaname + '.dot', 'w') as fl:
+        prDotHeader(fl)
+        prNodeDefs(fl, npda_obj.pda)
+        prOrientation(fl)
+        prEdges(fl, npda_obj.pda)
+        prClosing(fl)
+
+    os.system("dot -Tps " + pdaname + ".dot > " + pdaname + ".ps")
+    os.system("ps2pdf13 " + pdaname + ".ps")
+    os.system("rm " + pdaname + ".dot " + pdaname + ".ps")
+\end{minted}
+
+\subsection{PDA Stepping Interface}
+
+The PDA stepping interface is the real meat of the PDA.  Basically, we have a
+class called a Stepper.  The only things this class stores are an ID, the
+remaining input string, the current state, and the current stack.  We have a
+different Stepper object for each of the non-determistic ``forks'' in our PDA,
+and we store these Steppers in a list in our NPDA object.  Then, when we want
+to progress, or ``step'' our PDA, we call the \texttt{step\_all()} method.
+This method goes through each Stepper object in the list, and compares it to
+each tuple in the `Delta' of our NPDA, to check for possible continuations.
+For each match it finds (matching the input characters, top of the stack, and
+current state), it spawns a new Stepper object, containing the state after the
+step.  The original Stepper is discarded after all these comparisons, and all
+the new Steppers are added to the Stepper list.
+
+The \texttt{step\_all()} method was as follows:
+
+\begin{minted}{python}
+def step_all(self):
+    """
+    Steps though every stepper that we have by 1 step.
+    Returns true if there are more states that can be stepped through, and
+    false if we cannot do any more stepping (ie if the string is not accepted
+    by the pda)
+    """
+    # The new list of valid states after we step every stepper by 1
+    new_valid_states = list()
+    new_reject_states = list()
+
+    # Step every stepper by 1, and create a list of the new valid states
+    for s in self.stepper_list:
+        valid_states = s.step(self)
+        if not valid_states:
+            new_reject_states.append(s)
+        new_valid_states.extend(valid_states)
+
+    # Set the new valid states to be the npda.stepper_list
+    self.stepper_list = new_valid_states
+    # Set the rejected states
+    self.reject_list = new_reject_states
+\end{minted}
+
+The \texttt{step()} method was a Stepper method and was as follows:
+
+\begin{minted}{python}
+def step(self, npda):
+    """
+    Steps the current Stepper object, returning a list of new Stepper
+    objects resulting from any transitions, based on the given npda
+    """
+    steppers = list()
+
+    for d in npda.pda['Delta']:
+        if d[0] == self.state:
+            if d[1] == self.inpt[:1] or d[1] == '@':
+                # Top of stack is the end of the string, and so we also
+                # have to reverse the result using [::-1]
+                if d[2] == self.stack[-len(d[2]):][::-1] or d[2] == '@':
+                    new_stack = self.stack[:]
+                    new_inpt = self.inpt
+                    # Pop the specified characters from the stack
+                    if not d[2] == '@':
+                        new_stack = new_stack[:-len(d[2])]
+                    # Push the new characters to the stack
+                    if not d[4] == '@':
+                        new_stack = new_stack + d[4][::-1]
+                    # Consume input character (if not eps (@))
+                    if not d[1] == '@':
+                        new_inpt = new_inpt[1:]
+                    # Create the new Stepper object including new state
+                    # and add to the steppers list
+                    steppers.append(Stepper(new_inpt, d[3], new_stack))
+
+    # Return finished list of steppers
+    return steppers;
+\end{minted}
+
+The rest of our program was built on top of these two methods, allowing the
+user to either manually control each step or just have the program attempt to
+either accept or reject a given string automatically.
+
+\subsection{Summary of Work}
+
+I believe we split up this project very evenly, with everyone chipping in where
+needed and pulling their own weight.  Thus, I give the following scores:
+
+\begin{itemize}
+\item Colton Myers -- $34\%$
+\item Andrew Kuhnhausen -- $33\%$
+\item Landon Gilbert-Bland -- $33\%$
+\end{itemize}
+
 \end{document}
 
