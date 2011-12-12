@@ -263,7 +263,7 @@ output method, \texttt{pda2dot()}, so I will show just the former here:
 
 \begin{minted}{python}
 def pda2pdf(npda_obj, pdaname):
-    """Generate a .pdf file for the given NPDA object and pda_name
+    """Generate a .pdf file for the given NPDA object and pdaname
 
     NOTE:  The .pdf part of the filename should not be included in pdaname
     """
@@ -321,7 +321,8 @@ def step_all(self):
     self.reject_list = new_reject_states
 \end{minted}
 
-The \texttt{step()} method was a Stepper method and was as follows:
+\noindent
+\\The \texttt{step()} method was a Stepper method and was as follows:\\
 
 \begin{minted}{python}
 def step(self, npda):
