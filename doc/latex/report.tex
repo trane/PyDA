@@ -199,27 +199,38 @@ the program, as well as the ability for freeze and thaw current nodes that were
 running.
 \subsection{User Interaction}
 For the main user interaction with stepping through the states, many aspects were
-involved. The first thing we had to do is define exactally what this program should
-be able to do, and then provid the user with a very straighforward way of doing it.
-We opted to go with a model view controller (MVC) type of approach to seperate 
-out the parts of this program. The npda object acted as the model,, and the 
+involved. The first thing we had to do is define exactly what this program should
+be able to do, and then provided the user with a very straightforward way of doing it.
+We opted to go with a model view controller (MVC) type of approach to separate 
+out the parts of this program. The npda.py object acted as the model, and the 
 PyDA\_cli.py acted as the view and controller. I decided the best way to do 
-this would be to set up an event loop that processed user input, simaler to 
+this would be to set up an event loop that processed user input, similar to 
 a shell, or gdb. After we had defined everything that this program needed to do,
-it was a fairly straighforward process to parse the users commands and use it
+it was a fairly straightforward process to parse the users commands and use it
 to modify the underlying state of the program.
 \subsection{Freezing and Thawing}
-The original problem that we were running into was that it was dificult to process
-seperate threads, and to know when to spawn new threads, as well as freeze old threads.
-What we came up with was instead of creating 'threads' through multiple itteration, we just
+The original problem that we were running into was that it was difficult to process
+separate threads, and to know when to spawn new threads, as well as freeze old threads.
+What we came up with was instead of creating 'threads' through multiple iterations, we just
 used stepper objects (described by Colton bellow), which we didn't reuse. Whenever we
 stepped to a new state, instead of continue using the same thread we just created a new
 stepper object that had all of the information for that current state. This made it
 very simple to freeze current threads from running. All we had to do is move those
 objects out of the list that was currently getting processed, and when we thawed a
 stepper we move it back into the list that is getting processed. Due to the simple
-nature of our implementaion this was a very straight forward aspect of the program
+nature of our implementation this was a very straight forward aspect of the program
 to implement.
+\subsection{Summary of Work}
+I think we did a good job working together to plan out the whole project, then dividing
+up the actual coding. Colton coded up the more intensive parts of this program, so
+he gets an extra gold star from me.
+
+\begin{itemize}
+\item Colton Myers -- $34\%$
+\item Andrew Kuhnhausen -- $33\%$
+\item Landon Gilbert-Bland -- $33\%$
+\end{itemize}
+
 \section{Andrew Kuhnhausen}
 I focused on the formal verification, conversion and CLI elements of the
 assignment.
