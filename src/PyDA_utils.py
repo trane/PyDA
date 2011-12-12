@@ -72,7 +72,7 @@ def normalize(pda):
     return npda
 
 def pda2dot(npda_obj, pdaname):
-    """Generate a .dot file for the given NPDA object and pda_name
+    """Generate a .dot file for the given NPDA object and pdaname
 
     NOTE:  The .dot part of the filename should not be included in pdaname
     """
@@ -84,7 +84,7 @@ def pda2dot(npda_obj, pdaname):
         prClosing(fl)
 
 def pda2pdf(npda_obj, pdaname):
-    """Generate a .pdf file for the given NPDA object and pda_name
+    """Generate a .pdf file for the given NPDA object and pdaname
 
     NOTE:  The .pdf part of the filename should not be included in pdaname
     """
