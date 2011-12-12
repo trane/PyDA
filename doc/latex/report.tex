@@ -236,11 +236,12 @@ to be used to ``step'' our NPDAs.
 
 \subsection{Dot/PDF Output}
 
-The first was fairly straightforward.  Because on paper, PDAs and NPDAs look
-very similar to *FAs which we had done earlier, I could reuse much of the code
-provided to use for printing those automatons to PDFs.  The one major
-difference is the way the edges are printed.  This resulted in the following
-method which printed the edges from the given NPDA object to the Dot file:
+The first was fairly straightforward.  On paper, PDAs and NPDAs look
+very similar to *FAs which we had done earlier. This meant that I could reuse
+much of the code provided to us for printing those automatons to PDFs.  The
+one major difference is the way the edges are printed.  This resulted in the
+following method which printed the edges from the given NPDA object to the Dot
+file:
 
 \begin{minted}{python}
 def prEdges(fl, npda):
@@ -283,7 +284,7 @@ def pda2pdf(npda_obj, pdaname):
 The PDA stepping interface is the real meat of the PDA.  Basically, we have a
 class called a Stepper.  The only things this class stores are an ID, the
 remaining input string, the current state, and the current stack.  We have a
-different Stepper object for each of the non-determistic ``forks'' in our PDA,
+different Stepper object for each of the non-deterministic ``forks'' in our PDA,
 and we store these Steppers in a list in our NPDA object.  Then, when we want
 to progress, or ``step'' our PDA, we call the \texttt{step\_all()} method.
 This method goes through each Stepper object in the list, and compares it to
@@ -300,7 +301,7 @@ def step_all(self):
     """
     Steps though every stepper that we have by 1 step.
     Returns true if there are more states that can be stepped through, and
-    false if we cannot do any more stepping (ie if the string is not accepted
+    false if we cannot do any more stepping (e.g. if the string is not accepted
     by the pda)
     """
     # The new list of valid states after we step every stepper by 1
